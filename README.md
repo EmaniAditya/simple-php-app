@@ -32,3 +32,4 @@
 - rename exams.php to subjects.php and read subjects table data and dynamically display  in a table
 - details.php - fetch the data from the details table and present the data in a form and provide options to update if any data found other wise provide empty input fields to enter details and if clicked update button should write to the database's details table, even if the values are null
 - accorrdingly modify server2.php to perform the details.php tasks 
+- home page/ index.php - should display the details of the user in a table along with the subjects and class and section for the user and should be read only.

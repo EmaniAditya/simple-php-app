@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_query($mysqli, $insert_subject_query);
     }
 
-    $_SESSION['message'] = "details saved successfully!";
+    $_SESSION['message'] = "Details saved successfully!";
 }
 
 header('Location: exams.php');
