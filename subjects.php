@@ -34,8 +34,16 @@ $result = mysqli_query($mysqli, $query);
 
 <body>
     <nav>
-        <a href="index.php">home</a>
-        <a href="logout.php">logout</a>
+        <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true): ?>
+            <a href="index.php">Home</a>
+            <a href="details.php">Details</a>
+            <a href="subjects.php">Subjects</a>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="index.php">Home</a>
+            <a href="login.php">Login</a>
+            <a href="signup.php">Sign Up</a>
+        <?php endif; ?>
     </nav>
 
     <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>

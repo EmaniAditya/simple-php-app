@@ -1,4 +1,23 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <nav>
+        <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true): ?>
+            <a href="index.php">Home</a>
+            <a href="details.php">Details</a>
+            <a href="subjects.php">Subjects</a>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="index.php">Home</a>
+            <a href="login.php">Login</a>
+            <a href="signup.php">Sign Up</a>
+        <?php endif; ?>
+    </nav>
+    
+    <?php
 session_start();
 
 if (isset($_SESSION['timeout'])) {
@@ -17,18 +36,18 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) :
 
     // Fetch user details
     $details_query = "SELECT d.*, c.class_name, c.section 
-                     FROM details d 
-                     LEFT JOIN user_class uc ON d.user_id = uc.user_id 
-                     LEFT JOIN class c ON uc.class_id = c.class_id 
-                     WHERE d.user_id = '$user_id'";
+                      FROM details d 
+                      LEFT JOIN user_class uc ON d.user_id = uc.user_id 
+                      LEFT JOIN class c ON uc.class_id = c.class_id 
+                      WHERE d.user_id = '$user_id'";
     $details_result = mysqli_query($mysqli, $details_query);
     $details = mysqli_fetch_assoc($details_result);
 
     // Fetch user subjects
     $subjects_query = "SELECT s.subject_name 
-                      FROM subjects s 
-                      JOIN user_subjects us ON s.subject_id = us.subject_id 
-                      WHERE us.user_id = '$user_id'";
+                       FROM subjects s 
+                       JOIN user_subjects us ON s.subject_id = us.subject_id 
+                       WHERE us.user_id = '$user_id'";
     $subjects_result = mysqli_query($mysqli, $subjects_query);
 ?>
     <h2>Your Details</h2>
@@ -68,38 +87,5 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) :
     <?php endif; ?>
 <?php endif; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-
-<body>
-    <nav>
-        <a href="index.php">home</a>
-        <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) : ?>
-            <a href="logout.php">logout</a>
-            <a href="details.php">details</a>
-            <a href="exams.php">exam dates</a>
-            <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
-        <?php else : ?>
-            <a href="login.php">login</a>
-            <a href="signup.php">signup</a>
-        <?php endif; ?>
-    </nav>
-
-    <?php if (isset($_SESSION['message'])) : ?>
-        <p><?= $_SESSION['message'] ?></p>
-        <?php unset($_SESSION['message']); ?>
-    <?php endif; ?>
-
-
-    <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) : ?>
-        <h1>welcome <?= $_SESSION['username'] ?></h1>
-    <?php endif; ?>
 </body>
-
 </html>
