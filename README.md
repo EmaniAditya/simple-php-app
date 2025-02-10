@@ -33,3 +33,40 @@
 - details.php - fetch the data from the details table and present the data in a form and provide options to update if any data found other wise provide empty input fields to enter details and if clicked update button should write to the database's details table, even if the values are null
 - accorrdingly modify server2.php to perform the details.php tasks 
 - home page/ index.php - should display the details of the user in a table along with the subjects and class and section for the user and should be read only.
+
+-- Create fresh tables with proper structure
+CREATE TABLE subjects (
+    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_name VARCHAR(255) NOT NULL,
+    teacher_name VARCHAR(255) NOT NULL,
+    exam_date DATE NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE class (
+    class_id INT AUTO_INCREMENT PRIMARY KEY,
+    class_name VARCHAR(50) NOT NULL,
+    section VARCHAR(50) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE user_class (
+    user_id INT NOT NULL,
+    class_id INT NOT NULL,
+    PRIMARY KEY (user_id, class_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (class_id) REFERENCES class(class_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE details (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    roll_no VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE user_subjects (
+    user_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    PRIMARY KEY (user_id, subject_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+) ENGINE=InnoDB;

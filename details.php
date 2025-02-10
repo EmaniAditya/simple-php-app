@@ -42,21 +42,27 @@ $subjects_result = mysqli_query($mysqli, $subjects_query);
 
     <h1>Student details</h1>
     <form method="POST" action="server2.php">
-        <label for="name">name:</label>
+        <label for="name">Name:</label>
         <input type="text" id="name" name="name" required><br><br>
 
-        <label for="roll">roll no:</label>
-        <input type="text" id="roll" name="roll" required><br><br>
+        <label for="roll_no">Roll No:</label>
+        <input type="text" id="roll_no" name="roll_no" required><br><br>
 
-        <label for="subject">subject:</label>
-        <select id="subject" name="subject" required>
-            <option value="">select subject</option>
-            <?php while ($row = mysqli_fetch_assoc($subjects_result)) : ?>
-                <option value="<?= $row['subject_id'] ?>"><?= $row['subject_name'] ?></option>
-            <?php endwhile; ?>
-        </select><br><br>
+        <label for="class_name">Class:</label>
+        <input type="text" id="class_name" name="class_name" required>
 
-        <button type="submit">save</button>
+        <label for="section">Section:</label>
+        <input type="text" id="section" name="section" required><br><br>
+
+        <label>Subjects:</label><br>
+        <?php 
+        $subjects = mysqli_query($mysqli, "SELECT * FROM subjects");
+        while($subject = mysqli_fetch_assoc($subjects)): ?>
+            <input type="checkbox" name="subjects[]" value="<?= $subject['subject_id'] ?>">
+            <?= $subject['subject_name'] ?><br>
+        <?php endwhile; ?>
+
+        <button type="submit">Save</button>
     </form>
 </body>
 

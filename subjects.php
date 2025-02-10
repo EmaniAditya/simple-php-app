@@ -21,7 +21,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include('db.php');
 
-$query = "SELECT * FROM subjects";
+$query = "SELECT subject_name, teacher_name, exam_date FROM subjects";
 $result = mysqli_query($mysqli, $query);
 ?>
 
@@ -29,7 +29,7 @@ $result = mysqli_query($mysqli, $query);
 <html lang="en">
 
 <head>
-    <title>exam dates</title>
+    <title>Subjects</title>
 </head>
 
 <body>
@@ -40,12 +40,12 @@ $result = mysqli_query($mysqli, $query);
 
     <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <h1>exam dates</h1>
+    <h1>Subjects and Exam Dates</h1>
     <table border="1">
         <tr>
-            <th>subject</th>
-            <th>teacher</th>
-            <th>exam date</th>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Exam Date</th>
         </tr>
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
             <tr>
