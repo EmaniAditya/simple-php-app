@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_query($mysqli, "DELETE FROM user_class WHERE user_id = '$user_id'");
         mysqli_query($mysqli, "DELETE FROM user_subjects WHERE user_id = '$user_id'");
 
-        $_SESSION['message'] = "Details deleted successfully!";
+        $_SESSION['message'] = "details deleted successfully";
         header('Location: index.php');
         exit;
     } else {
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_query($mysqli, "INSERT INTO user_subjects (user_id, subject_id) VALUES ('$user_id', '$subject_id')");
         }
 
-        $_SESSION['message'] = "Details updated successfully!";
+        $_SESSION['message'] = "details updated successfully";
         header('Location: index.php');
         exit;
     }

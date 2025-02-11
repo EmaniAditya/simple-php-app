@@ -58,27 +58,27 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
+    <title>details</title>
 </head>
 <body>
     <nav>
-        <a href="index.php">Home</a>
-        <a href="details.php">Details</a>
-        <a href="subjects.php">Subjects</a>
-        <a href="logout.php">Logout</a>
+        <a href="index.php">home</a>
+        <a href="details.php">details</a>
+        <a href="subjects.php">subjects</a>
+        <a href="logout.php">logout</a>
     </nav>
 
-    <p>Timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
+    <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <h1>Update Your Details</h1>
+    <h1>update your details</h1>
     <form method="POST" action="server2.php">
-        <label for="name">Name:</label>
+        <label for="name">name:</label>
         <input type="text" id="name" name="name" value="<?= $details['name'] ?? '' ?>" required><br><br>
 
-        <label for="roll_no">Roll No:</label>
+        <label for="roll_no">roll no:</label>
         <input type="text" id="roll_no" name="roll_no" value="<?= $details['roll_no'] ?? '' ?>" required><br><br>
 
-        <label>Class:</label>
+        <label>class:</label>
         <?php foreach ($classes as $class) : ?>
             <input type="radio" name="class_id" value="<?= $class['class_id'] ?>"
                 <?= $class['class_id'] == $user_class ? 'checked' : '' ?>>
@@ -86,7 +86,7 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <?php endforeach; ?>
         <br>
 
-        <label>Subjects:</label><br>
+        <label>subjects:</label><br>
         <?php foreach ($all_subjects as $subject) : ?>
             <input type="checkbox" name="subjects[]" value="<?= $subject['subject_id'] ?>"
                 <?= in_array($subject['subject_id'], $user_subjects) ? 'checked' : '' ?>>
@@ -94,8 +94,8 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <?php endforeach; ?>
         <br>
 
-        <button type="submit" name="action" value="update">Update</button>
-        <button type="submit" name="action" value="delete">Delete</button>
+        <button type="submit" name="action" value="update">update</button>
+        <button type="submit" name="action" value="delete">delete</button>
     </form>
 </body>
 </html>

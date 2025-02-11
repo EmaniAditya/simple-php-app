@@ -23,28 +23,32 @@ include('db.php');
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details
 $details_query = "SELECT * FROM details WHERE user_id = '$user_id'";
 $details_result = mysqli_query($mysqli, $details_query);
 $details = mysqli_fetch_assoc($details_result);
 
-// Fetch user class
-$class_query = "SELECT c.class_name, c.section
-                FROM class c
-                JOIN user_class uc ON c.class_id = uc.class_id
-                WHERE uc.user_id = '$user_id'";
+$class_id_query = "SELECT class_id FROM user_class WHERE user_id = '$user_id'";
+$class_id_result = mysqli_query($mysqli, $class_id_query);
+$class_id_row = mysqli_fetch_assoc($class_id_result);
+$class_id = $class_id_row['class_id'];
+
+$class_query = "SELECT class_name, section FROM class WHERE class_id = '$class_id'";
 $class_result = mysqli_query($mysqli, $class_query);
 $class = mysqli_fetch_assoc($class_result);
 
-// Fetch user subjects
-$subjects_query = "SELECT s.subject_name
-                   FROM subjects s
-                   JOIN user_subjects us ON s.subject_id = us.subject_id
-                   WHERE us.user_id = '$user_id'";
-$subjects_result = mysqli_query($mysqli, $subjects_query);
+$subject_ids_query = "SELECT subject_id FROM user_subjects WHERE user_id = '$user_id'";
+$subject_ids_result = mysqli_query($mysqli, $subject_ids_query);
+$subject_ids = [];
+while ($row = mysqli_fetch_assoc($subject_ids_result)) {
+    $subject_ids[] = $row['subject_id'];
+}
+
 $subjects = [];
-while ($row = mysqli_fetch_assoc($subjects_result)) {
-    $subjects[] = $row['subject_name'];
+foreach ($subject_ids as $subject_id) {
+    $subject_query = "SELECT subject_name FROM subjects WHERE subject_id = '$subject_id'";
+    $subject_result = mysqli_query($mysqli, $subject_query);
+    $subject_row = mysqli_fetch_assoc($subject_result);
+    $subjects[] = $subject_row['subject_name'];
 }
 ?>
 
@@ -53,57 +57,57 @@ while ($row = mysqli_fetch_assoc($subjects_result)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>home</title>
 </head>
 <body>
     <nav>
-        <a href="index.php">Home</a>
-        <a href="details.php">Details</a>
-        <a href="subjects.php">Subjects</a>
-        <a href="logout.php">Logout</a>
+        <a href="index.php">home</a>
+        <a href="details.php">details</a>
+        <a href="subjects.php">subjects</a>
+        <a href="logout.php">logout</a>
     </nav>
 
-    <p>Timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
+    <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <h1>Welcome, <?= $_SESSION['username'] ?>!</h1>
+    <h1>welcome, <?= $_SESSION['username'] ?>!</h1>
 
-    <h2>Your Details</h2>
+    <h2>ur details</h2>
     <?php if ($details) : ?>
         <table border="1">
             <tr>
-                <th>Name</th>
+                <th>name</th>
                 <td><?= $details['name'] ?></td>
             </tr>
             <tr>
-                <th>Roll No</th>
+                <th>roll no</th>
                 <td><?= $details['roll_no'] ?></td>
             </tr>
         </table>
     <?php else : ?>
-        <p>No details found. Please <a href="details.php">add your details</a>.</p>
+        <p>no details found. please <a href="details.php">add your details</a>.</p>
     <?php endif; ?>
 
-    <h2>Your Class</h2>
+    <h2>ur class</h2>
     <?php if ($class) : ?>
         <table border="1">
             <tr>
-                <th>Class</th>
+                <th>class</th>
                 <td><?= $class['class_name'] ?></td>
             </tr>
             <tr>
-                <th>Section</th>
+                <th>section</th>
                 <td><?= $class['section'] ?></td>
             </tr>
         </table>
     <?php else : ?>
-        <p>No class information found.</p>
+        <p>no class information found.</p>
     <?php endif; ?>
 
-    <h2>Your Subjects</h2>
+    <h2>ur subjects</h2>
     <?php if (!empty($subjects)) : ?>
         <table border="1">
             <tr>
-                <th>Subjects</th>
+                <th>subjects</th>
             </tr>
             <?php foreach ($subjects as $subject) : ?>
                 <tr>
@@ -112,7 +116,7 @@ while ($row = mysqli_fetch_assoc($subjects_result)) {
             <?php endforeach; ?>
         </table>
     <?php else : ?>
-        <p>No subjects found.</p>
+        <p>no subjects found.</p>
     <?php endif; ?>
 </body>
 </html>

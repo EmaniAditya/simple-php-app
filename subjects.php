@@ -29,30 +29,30 @@ $result = mysqli_query($mysqli, $query);
 <html lang="en">
 
 <head>
-    <title>Subjects</title>
+    <title>subjects</title>
 </head>
 
 <body>
     <nav>
         <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true): ?>
-            <a href="index.php">Home</a>
-            <a href="details.php">Details</a>
-            <a href="subjects.php">Subjects</a>
-            <a href="logout.php">Logout</a>
+            <a href="index.php">home</a>
+            <a href="details.php">details</a>
+            <a href="subjects.php">subjects</a>
+            <a href="logout.php">logout</a>
         <?php else: ?>
-            <a href="index.php">Home</a>
-            <a href="login.php">Login</a>
-            <a href="signup.php">Sign Up</a>
+            <a href="index.php">home</a>
+            <a href="login.php">login</a>
+            <a href="signup.php">sign Up</a>
         <?php endif; ?>
     </nav>
 
     <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <h1>Subjects and Exam Dates</h1>
+    <h1>subjects</h1>
     <table border="1">
         <tr>
-            <th>Subject ID</th>
-            <th>Subject Name</th>
+            <th>subject id</th>
+            <th>subject name</th>
         </tr>
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
             <tr>
