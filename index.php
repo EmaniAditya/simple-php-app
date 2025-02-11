@@ -8,10 +8,10 @@ if (isset($_SESSION['timeout'])) {
         header('Location: login.php');
         exit;
     } else {
-        $_SESSION['timeout'] = time() + (5 * 60); 
+        $_SESSION['timeout'] = time() + (5 * 60);
     }
 } else {
-    $_SESSION['timeout'] = time() + (5 * 60); // Set initial timeout
+    $_SESSION['timeout'] = time() + (5 * 60);
 }
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -22,17 +22,18 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include('db.php');
 
 $user_id = $_SESSION['user_id'];
-$details_query = "SELECT d.*, c.class_name, c.section 
-                  FROM details d 
-                  LEFT JOIN user_class uc ON d.user_id = uc.user_id 
-                  LEFT JOIN class c ON uc.class_id = c.class_id 
+
+$details_query = "SELECT d.name, d.roll_no, c.class_name, c.section
+                  FROM details d
+                  LEFT JOIN user_class uc ON d.user_id = uc.user_id
+                  LEFT JOIN class c ON uc.class_id = c.class_id
                   WHERE d.user_id = '$user_id'";
 $details_result = mysqli_query($mysqli, $details_query);
 $details = mysqli_fetch_assoc($details_result);
 
-$subjects_query = "SELECT s.subject_name 
-                   FROM subjects s 
-                   JOIN user_subjects us ON s.subject_id = us.subject_id 
+$subjects_query = "SELECT s.subject_name
+                   FROM subjects s
+                   JOIN user_subjects us ON s.subject_id = us.subject_id
                    WHERE us.user_id = '$user_id'";
 $subjects_result = mysqli_query($mysqli, $subjects_query);
 $subjects = [];
