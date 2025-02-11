@@ -6,6 +6,6 @@
 [x] logout.php
 [x] server.php
 [x] subjects.php
-[] details.php
-[] server.php
-[] index.php
+[x] details.php
+[x] server.php
+[x] index.php

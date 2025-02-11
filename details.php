@@ -8,10 +8,10 @@ if (isset($_SESSION['timeout'])) {
         header('Location: login.php');
         exit;
     } else {
-        $_SESSION['timeout'] = time() + (5 * 60); 
+        $_SESSION['timeout'] = time() + (5 * 60);
     }
 } else {
-    $_SESSION['timeout'] = time() + (5 * 60); 
+    $_SESSION['timeout'] = time() + (5 * 60);
 }
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -23,22 +23,26 @@ include('db.php');
 
 $user_id = $_SESSION['user_id'];
 
+$details_query = "SELECT * FROM details WHERE user_id = '$user_id'";
+$details_result = mysqli_query($mysqli, $details_query);
+$details = mysqli_fetch_assoc($details_result);
+
 $class_query = "SELECT class_id, class_name, section FROM class";
 $class_result = mysqli_query($mysqli, $class_query);
 $classes = [];
 while ($row = mysqli_fetch_assoc($class_result)) {
-    $classes[] = $row[];
+    $classes[] = $row;
 }
 
 $user_class_query = "SELECT class_id FROM user_class WHERE user_id = '$user_id'";
-$user_class_result = $mysqli_query($mysqli, $user_class_query);
-$user_class = $user_class_result; 
+$user_class_result = mysqli_query($mysqli, $user_class_query);
+$user_class = mysqli_fetch_assoc($user_class_result)['class_id'] ?? null;
 
 $all_subjects_query = "SELECT subject_id, subject_name FROM subjects";
 $all_subjects_result = mysqli_query($mysqli, $all_subjects_query);
 $all_subjects = [];
 while ($row = mysqli_fetch_assoc($all_subjects_result)) {
-    $all_subjects[] = $row[];
+    $all_subjects[] = $row;
 }
 
 $user_subjects_query = "SELECT subject_id FROM user_subjects WHERE user_id = '$user_id'";
@@ -75,10 +79,10 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <input type="text" id="roll_no" name="roll_no" value="<?= $details['roll_no'] ?? '' ?>" required><br><br>
 
         <label>Class:</label>
-        <?php foreach ($classes as $classs) : ?>
-            <input type="checkbox" name="classes[]" value="<?= $class['class_id'] ?>" 
-                <? in_attay($class['class_id'], $class_name) ? 'checked' : '' ?>>
-            <?= $class['class_name'] ?><br>
+        <?php foreach ($classes as $class) : ?>
+            <input type="radio" name="class_id" value="<?= $class['class_id'] ?>"
+                <?= $class['class_id'] == $user_class ? 'checked' : '' ?>>
+            <?= $class['class_name'] . ' - ' . $class['section'] ?><br>
         <?php endforeach; ?>
         <br>
 

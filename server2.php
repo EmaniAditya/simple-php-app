@@ -28,32 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $name = mysqli_real_escape_string($mysqli, $_POST['name']);
         $roll_no = mysqli_real_escape_string($mysqli, $_POST['roll_no']);
-        $class_name = mysqli_real_escape_string($mysqli, $_POST['class_name']);
-        $section = mysqli_real_escape_string($mysqli, $_POST['section']);
+        $class_id = mysqli_real_escape_string($mysqli, $_POST['class_id']);
         $selected_subjects = $_POST['subjects'] ?? [];
 
         mysqli_begin_transaction($mysqli);
         try {
-            $details_query = "INSERT INTO details (user_id, name, roll_no) 
+            $details_query = "INSERT INTO details (user_id, name, roll_no)
                               VALUES ('$user_id', '$name', '$roll_no')
-                              ON DUPLICATE KEY UPDATE 
-                              name = VALUES(name), 
+                              ON DUPLICATE KEY UPDATE
+                              name = VALUES(name),
                               roll_no = VALUES(roll_no)";
             if (!mysqli_query($mysqli, $details_query)) {
                 throw new Exception("Error updating details: " . mysqli_error($mysqli));
-            }
-
-            $class_check = "SELECT class_id FROM class WHERE class_name = '$class_name' AND section = '$section'";
-            $result = mysqli_query($mysqli, $class_check);
-            if (mysqli_num_rows($result) > 0) {
-                $class = mysqli_fetch_assoc($result);
-                $class_id = $class['class_id'];
-            } else {
-                $insert_class = "INSERT INTO class (class_name, section) VALUES ('$class_name', '$section')";
-                if (!mysqli_query($mysqli, $insert_class)) {
-                    throw new Exception("Error creating class: " . mysqli_error($mysqli));
-                }
-                $class_id = mysqli_insert_id($mysqli);
             }
 
             mysqli_query($mysqli, "DELETE FROM user_class WHERE user_id = '$user_id'");
@@ -81,3 +67,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+?>
