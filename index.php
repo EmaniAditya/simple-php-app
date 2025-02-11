@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Check for session timeout
 if (isset($_SESSION['timeout'])) {
     if (time() > $_SESSION['timeout']) {
         session_unset();
@@ -15,7 +14,6 @@ if (isset($_SESSION['timeout'])) {
     $_SESSION['timeout'] = time() + (5 * 60); // Set initial timeout
 }
 
-// Redirect if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: login.php');
     exit;
@@ -23,7 +21,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include('db.php');
 
-// Fetch user details
 $user_id = $_SESSION['user_id'];
 $details_query = "SELECT d.*, c.class_name, c.section 
                   FROM details d 
@@ -33,7 +30,6 @@ $details_query = "SELECT d.*, c.class_name, c.section
 $details_result = mysqli_query($mysqli, $details_query);
 $details = mysqli_fetch_assoc($details_result);
 
-// Fetch user subjects
 $subjects_query = "SELECT s.subject_name 
                    FROM subjects s 
                    JOIN user_subjects us ON s.subject_id = us.subject_id 
@@ -53,7 +49,6 @@ while ($row = mysqli_fetch_assoc($subjects_result)) {
     <title>Home</title>
 </head>
 <body>
-    <!-- Navigation Links -->
     <nav>
         <a href="index.php">Home</a>
         <a href="details.php">Details</a>
@@ -61,13 +56,10 @@ while ($row = mysqli_fetch_assoc($subjects_result)) {
         <a href="logout.php">Logout</a>
     </nav>
 
-    <!-- Timeout Message -->
     <p>Timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <!-- Welcome Message -->
     <h1>Welcome, <?= $_SESSION['username'] ?>!</h1>
 
-    <!-- Display User Details -->
     <h2>Your Details</h2>
     <?php if ($details) : ?>
         <table border="1">

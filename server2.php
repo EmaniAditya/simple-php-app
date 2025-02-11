@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php');
         exit;
     } else {
-        // Existing update logic with class check
         $name = mysqli_real_escape_string($mysqli, $_POST['name']);
         $roll_no = mysqli_real_escape_string($mysqli, $_POST['roll_no']);
         $class_name = mysqli_real_escape_string($mysqli, $_POST['class_name']);
@@ -35,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_begin_transaction($mysqli);
         try {
-            // Update details
             $details_query = "INSERT INTO details (user_id, name, roll_no) 
                               VALUES ('$user_id', '$name', '$roll_no')
                               ON DUPLICATE KEY UPDATE 
@@ -45,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Error updating details: " . mysqli_error($mysqli));
             }
 
-            // Handle class
             $class_check = "SELECT class_id FROM class WHERE class_name = '$class_name' AND section = '$section'";
             $result = mysqli_query($mysqli, $class_check);
             if (mysqli_num_rows($result) > 0) {
@@ -59,14 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $class_id = mysqli_insert_id($mysqli);
             }
 
-            // Update user_class
             mysqli_query($mysqli, "DELETE FROM user_class WHERE user_id = '$user_id'");
             $link_class = "INSERT INTO user_class (user_id, class_id) VALUES ('$user_id', '$class_id')";
             if (!mysqli_query($mysqli, $link_class)) {
                 throw new Exception("Error linking class: " . mysqli_error($mysqli));
             }
 
-            // Update subjects
             mysqli_query($mysqli, "DELETE FROM user_subjects WHERE user_id = '$user_id'");
             foreach ($selected_subjects as $subject_id) {
                 $subject_id = mysqli_real_escape_string($mysqli, $subject_id);

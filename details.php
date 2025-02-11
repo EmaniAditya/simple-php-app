@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Check for session timeout
 if (isset($_SESSION['timeout'])) {
     if (time() > $_SESSION['timeout']) {
         session_unset();
@@ -9,13 +8,12 @@ if (isset($_SESSION['timeout'])) {
         header('Location: login.php');
         exit;
     } else {
-        $_SESSION['timeout'] = time() + (5 * 60); // Reset timeout
+        $_SESSION['timeout'] = time() + (5 * 60); 
     }
 } else {
-    $_SESSION['timeout'] = time() + (5 * 60); // Set initial timeout
+    $_SESSION['timeout'] = time() + (5 * 60); 
 }
 
-// Redirect if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: login.php');
     exit;
@@ -23,7 +21,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include('db.php');
 
-// Fetch user details
 $user_id = $_SESSION['user_id'];
 $details_query = "SELECT d.*, c.class_name, c.section 
                   FROM details d 
@@ -33,7 +30,6 @@ $details_query = "SELECT d.*, c.class_name, c.section
 $details_result = mysqli_query($mysqli, $details_query);
 $details = mysqli_fetch_assoc($details_result);
 
-// Fetch all available subjects
 $all_subjects_query = "SELECT subject_id, subject_name FROM subjects";
 $all_subjects_result = mysqli_query($mysqli, $all_subjects_query);
 $all_subjects = [];
@@ -41,7 +37,6 @@ while ($row = mysqli_fetch_assoc($all_subjects_result)) {
     $all_subjects[] = $row;
 }
 
-// Fetch user's selected subjects
 $user_subjects_query = "SELECT subject_id FROM user_subjects WHERE user_id = '$user_id'";
 $user_subjects_result = mysqli_query($mysqli, $user_subjects_query);
 $user_subjects = [];
@@ -58,7 +53,6 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
     <title>Details</title>
 </head>
 <body>
-    <!-- Navigation Links -->
     <nav>
         <a href="index.php">Home</a>
         <a href="details.php">Details</a>
@@ -66,10 +60,8 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <a href="logout.php">Logout</a>
     </nav>
 
-    <!-- Timeout Message -->
     <p>Timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
 
-    <!-- Form to Update/Delete Details -->
     <h1>Update Your Details</h1>
     <form method="POST" action="server2.php">
         <label for="name">Name:</label>
