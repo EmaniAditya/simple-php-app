@@ -23,14 +23,20 @@ include('db.php');
 
 $user_id = $_SESSION['user_id'];
 
-$details_query = "SELECT d.name, d.roll_no, c.class_name, c.section
-                  FROM details d
-                  LEFT JOIN user_class uc ON d.user_id = uc.user_id
-                  LEFT JOIN class c ON uc.class_id = c.class_id
-                  WHERE d.user_id = '$user_id'";
+// Fetch user details
+$details_query = "SELECT * FROM details WHERE user_id = '$user_id'";
 $details_result = mysqli_query($mysqli, $details_query);
 $details = mysqli_fetch_assoc($details_result);
 
+// Fetch user class
+$class_query = "SELECT c.class_name, c.section
+                FROM class c
+                JOIN user_class uc ON c.class_id = uc.class_id
+                WHERE uc.user_id = '$user_id'";
+$class_result = mysqli_query($mysqli, $class_query);
+$class = mysqli_fetch_assoc($class_result);
+
+// Fetch user subjects
 $subjects_query = "SELECT s.subject_name
                    FROM subjects s
                    JOIN user_subjects us ON s.subject_id = us.subject_id
@@ -72,21 +78,41 @@ while ($row = mysqli_fetch_assoc($subjects_result)) {
                 <th>Roll No</th>
                 <td><?= $details['roll_no'] ?></td>
             </tr>
-            <tr>
-                <th>Class</th>
-                <td><?= $details['class_name'] ?></td>
-            </tr>
-            <tr>
-                <th>Section</th>
-                <td><?= $details['section'] ?></td>
-            </tr>
-            <tr>
-                <th>Subjects</th>
-                <td><?= implode(", ", $subjects) ?></td>
-            </tr>
         </table>
     <?php else : ?>
         <p>No details found. Please <a href="details.php">add your details</a>.</p>
+    <?php endif; ?>
+
+    <h2>Your Class</h2>
+    <?php if ($class) : ?>
+        <table border="1">
+            <tr>
+                <th>Class</th>
+                <td><?= $class['class_name'] ?></td>
+            </tr>
+            <tr>
+                <th>Section</th>
+                <td><?= $class['section'] ?></td>
+            </tr>
+        </table>
+    <?php else : ?>
+        <p>No class information found.</p>
+    <?php endif; ?>
+
+    <h2>Your Subjects</h2>
+    <?php if (!empty($subjects)) : ?>
+        <table border="1">
+            <tr>
+                <th>Subjects</th>
+            </tr>
+            <?php foreach ($subjects as $subject) : ?>
+                <tr>
+                    <td><?= $subject ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else : ?>
+        <p>No subjects found.</p>
     <?php endif; ?>
 </body>
 </html>
