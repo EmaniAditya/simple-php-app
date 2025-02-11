@@ -21,7 +21,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include('db.php');
 
-$query = "SELECT subject_name, teacher_name, exam_date FROM subjects";
+$query = "SELECT subject_id, subject_name FROM subjects";
 $result = mysqli_query($mysqli, $query);
 ?>
 
@@ -51,15 +51,13 @@ $result = mysqli_query($mysqli, $query);
     <h1>Subjects and Exam Dates</h1>
     <table border="1">
         <tr>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Exam Date</th>
+            <th>Subject ID</th>
+            <th>Subject Name</th>
         </tr>
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
             <tr>
+                <td><?= $row['subject_id'] ?></td>
                 <td><?= $row['subject_name'] ?></td>
-                <td><?= $row['teacher_name'] ?></td>
-                <td><?= $row['exam_date'] ?></td>
             </tr>
         <?php endwhile; ?>
     </table>
