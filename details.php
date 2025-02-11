@@ -1,55 +1,65 @@
 <?php
-session_start();
+session_start(); // Start the session to manage user login state
 
+// Check if session timeout is set
 if (isset($_SESSION['timeout'])) {
+    // If the current time exceeds the timeout, destroy the session and redirect to login
     if (time() > $_SESSION['timeout']) {
-        session_unset();
-        session_destroy();
-        header('Location: login.php');
-        exit;
+        session_unset(); // Clear session variables
+        session_destroy(); // Destroy the session
+        header('Location: login.php'); // Redirect to login page
+        exit; // Stop further execution
     } else {
-        $_SESSION['timeout'] = time() + (5 * 60);
+        // Reset the timeout for the session
+        $_SESSION['timeout'] = time() + (5 * 60); // Extend timeout by 5 minutes
     }
 } else {
-    $_SESSION['timeout'] = time() + (5 * 60);
+    // Initialize session timeout if not set
+    $_SESSION['timeout'] = time() + (5 * 60); // Set timeout for 5 minutes
 }
 
+// Check if the user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: login.php');
-    exit;
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit; // Stop further execution
 }
 
-include('db.php');
+include('db.php'); // Include database connection file
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id']; // Get the logged-in user's ID
 
+// Query to fetch user details from the database
 $details_query = "SELECT * FROM details WHERE user_id = '$user_id'";
-$details_result = mysqli_query($mysqli, $details_query);
-$details = mysqli_fetch_assoc($details_result);
+$details_result = mysqli_query($mysqli, $details_query); // Execute the query
+$details = mysqli_fetch_assoc($details_result); // Fetch user details
 
+// Query to fetch all classes
 $class_query = "SELECT class_id, class_name, section FROM class";
-$class_result = mysqli_query($mysqli, $class_query);
-$classes = [];
+$class_result = mysqli_query($mysqli, $class_query); // Execute the query
+$classes = []; // Initialize an array to hold class data
 while ($row = mysqli_fetch_assoc($class_result)) {
-    $classes[] = $row;
+    $classes[] = $row; // Add each class to the classes array
 }
 
+// Query to fetch the user's class
 $user_class_query = "SELECT class_id FROM user_class WHERE user_id = '$user_id'";
-$user_class_result = mysqli_query($mysqli, $user_class_query);
-$user_class = mysqli_fetch_assoc($user_class_result)['class_id'] ?? null;
+$user_class_result = mysqli_query($mysqli, $user_class_query); // Execute the query
+$user_class = mysqli_fetch_assoc($user_class_result)['class_id'] ?? null; // Get the user's class ID
 
+// Query to fetch all subjects
 $all_subjects_query = "SELECT subject_id, subject_name FROM subjects";
-$all_subjects_result = mysqli_query($mysqli, $all_subjects_query);
-$all_subjects = [];
+$all_subjects_result = mysqli_query($mysqli, $all_subjects_query); // Execute the query
+$all_subjects = []; // Initialize an array to hold subject data
 while ($row = mysqli_fetch_assoc($all_subjects_result)) {
-    $all_subjects[] = $row;
+    $all_subjects[] = $row; // Add each subject to the all_subjects array
 }
 
+// Query to fetch the user's subjects
 $user_subjects_query = "SELECT subject_id FROM user_subjects WHERE user_id = '$user_id'";
-$user_subjects_result = mysqli_query($mysqli, $user_subjects_query);
-$user_subjects = [];
+$user_subjects_result = mysqli_query($mysqli, $user_subjects_query); // Execute the query
+$user_subjects = []; // Initialize an array to hold user's subject IDs
 while ($row = mysqli_fetch_assoc($user_subjects_result)) {
-    $user_subjects[] = $row['subject_id'];
+    $user_subjects[] = $row['subject_id']; // Add each subject ID to the user_subjects array
 }
 ?>
 
@@ -68,10 +78,10 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <a href="logout.php">logout</a>
     </nav>
 
-    <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p>
+    <p>timeout in: <?= ($_SESSION['timeout'] - time()) / 60 ?> minutes</p> <!-- Display remaining session time -->
 
     <h1>update your details</h1>
-    <form method="POST" action="server2.php">
+    <form method="POST" action="server2.php"> <!-- Form to update user details -->
         <label for="name">name:</label>
         <input type="text" id="name" name="name" value="<?= $details['name'] ?? '' ?>" required><br><br>
 
@@ -81,7 +91,7 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <label>class:</label>
         <?php foreach ($classes as $class) : ?>
             <input type="radio" name="class_id" value="<?= $class['class_id'] ?>"
-                <?= $class['class_id'] == $user_class ? 'checked' : '' ?>>
+                <?= $class['class_id'] == $user_class ? 'checked' : '' ?>> <!-- Check if this class is the user's class -->
             <?= $class['class_name'] . ' - ' . $class['section'] ?><br>
         <?php endforeach; ?>
         <br>
@@ -89,13 +99,13 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <label>subjects:</label><br>
         <?php foreach ($all_subjects as $subject) : ?>
             <input type="checkbox" name="subjects[]" value="<?= $subject['subject_id'] ?>"
-                <?= in_array($subject['subject_id'], $user_subjects) ? 'checked' : '' ?>>
+                <?= in_array($subject['subject_id'], $user_subjects) ? 'checked' : '' ?>> <!-- Check if this subject is selected by the user -->
             <?= $subject['subject_name'] ?><br>
         <?php endforeach; ?>
         <br>
 
-        <button type="submit" name="action" value="update">update</button>
-        <button type="submit" name="action" value="delete">delete</button>
+        <button type="submit" name="action" value="update">update</button> <!-- Button to update details -->
+        <button type="submit" name="action" value="delete">delete</button> <!-- Button to delete user -->
     </form>
 </body>
 </html>
