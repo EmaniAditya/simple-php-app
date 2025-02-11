@@ -22,19 +22,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include('db.php');
 
 $user_id = $_SESSION['user_id'];
-$details_query = "SELECT d.*, c.class_name, c.section 
-                  FROM details d 
-                  LEFT JOIN user_class uc ON d.user_id = uc.user_id 
-                  LEFT JOIN class c ON uc.class_id = c.class_id 
-                  WHERE d.user_id = '$user_id'";
-$details_result = mysqli_query($mysqli, $details_query);
-$details = mysqli_fetch_assoc($details_result);
+
+$class_query = "SELECT class_id, class_name, section FROM class";
+$class_result = mysqli_query($mysqli, $class_query);
+$classes = [];
+while ($row = mysqli_fetch_assoc($class_result)) {
+    $classes[] = $row[];
+}
+
+$user_class_query = "SELECT class_id FROM user_class WHERE user_id = '$user_id'";
+$user_class_result = $mysqli_query($mysqli, $user_class_query);
+$user_class = $user_class_result; 
 
 $all_subjects_query = "SELECT subject_id, subject_name FROM subjects";
 $all_subjects_result = mysqli_query($mysqli, $all_subjects_query);
 $all_subjects = [];
 while ($row = mysqli_fetch_assoc($all_subjects_result)) {
-    $all_subjects[] = $row;
+    $all_subjects[] = $row[];
 }
 
 $user_subjects_query = "SELECT subject_id FROM user_subjects WHERE user_id = '$user_id'";
@@ -70,11 +74,13 @@ while ($row = mysqli_fetch_assoc($user_subjects_result)) {
         <label for="roll_no">Roll No:</label>
         <input type="text" id="roll_no" name="roll_no" value="<?= $details['roll_no'] ?? '' ?>" required><br><br>
 
-        <label for="class_name">Class:</label>
-        <input type="text" id="class_name" name="class_name" value="<?= $details['class_name'] ?? '' ?>" required><br><br>
-
-        <label for="section">Section:</label>
-        <input type="text" id="section" name="section" value="<?= $details['section'] ?? '' ?>" required><br><br>
+        <label>Class:</label>
+        <?php foreach ($classes as $classs) : ?>
+            <input type="checkbox" name="classes[]" value="<?= $class['class_id'] ?>" 
+                <? in_attay($class['class_id'], $class_name) ? 'checked' : '' ?>>
+            <?= $class['class_name'] ?><br>
+        <?php endforeach; ?>
+        <br>
 
         <label>Subjects:</label><br>
         <?php foreach ($all_subjects as $subject) : ?>

@@ -8,7 +8,7 @@ if (isset($_SESSION['timeout'])) {
         header('Location: login.php');
         exit;
     } else {
-        $_SESSION['timeout'] = time() + (5 * 60); // Reset timeout
+        $_SESSION['timeout'] = time() + (5 * 60); 
     }
 } else {
     $_SESSION['timeout'] = time() + (5 * 60); // Set initial timeout
