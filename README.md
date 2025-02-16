@@ -64,3 +64,10 @@ simple-php-app is a basic web application built with PHP and MySQL, designed to 
 - **subjects**: Stores subject information (`subject_name`).
 - **user_class**: Maps users to their classes.
 - **user_subjects**: Maps users to their subjects.
+
+## Additional Resources
+
+- **W3Schools PHP Tutorial**: [Learn PHP](https://www.w3schools.com/php/)
+- **W3Schools PHP Exercises**: [PHP Exercises](https://www.w3schools.com/php/php_exercises.asp)
+- **W3Schools MySQL Tutorial**: [Learn MySQL](https://www.w3schools.com/sql/)
+- **W3Schools MySQL Exercises**: [MySQL Exercises](https://www.w3schools.com/sql/sql_exercises.asp)
